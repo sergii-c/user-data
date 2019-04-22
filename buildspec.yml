@@ -1,6 +1,6 @@
 version: 0.1
 
-phases:
+phases:      
   install:
     commands:
       - echo ### installing maven ###
@@ -10,6 +10,7 @@ phases:
       - apt-get update -y
       - apt-get install -y openjdk-8-jdk-headless
       - echo apt-get install -y maven
+      - cp ./settings.xml /root/.m2/settings.xml
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
