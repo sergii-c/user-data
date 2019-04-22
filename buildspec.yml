@@ -25,6 +25,6 @@ phases:
     commands:
       - echo Build completed on `date`
       - echo Tagging image
-      - echo docker tag codebuild-poc-20190416:latest 454394710488.dkr.ecr.us-east-1.amazonaws.com/codebuild-poc-20190416:latest
+      - echo docker tag codebuild-poc-20190416:latest 671124307843.dkr.ecr.us-east-1.amazonaws.com/poc-tutorial:latest
       - echo Pushing the Docker image...
-      - echo docker push 454394710488.dkr.ecr.us-east-1.amazonaws.com/codebuild-poc-20190416:latest
+      - echo docker push 671124307843.dkr.ecr.us-east-1.amazonaws.com/poc-tutorial:latest
