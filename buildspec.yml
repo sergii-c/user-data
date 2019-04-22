@@ -1,0 +1,30 @@
+version: 0.1
+
+phases:
+  install:
+    commands:
+      - echo ### installing maven ###
+      - apt-get update -y
+      - apt-get install -y software-properties-common
+      - add-apt-repository ppa:openjdk-r/ppa
+      - apt-get update -y
+      - apt-get install -y openjdk-8-jdk-headless
+      - echo apt-get install -y maven
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - $(aws ecr get-login --no-include-email --region=us-east-1)
+  build:
+    commands:
+      - echo Build started on `date`      
+      - echo Now we go with maven
+      - mvn clean deploy
+      - echo Building the Docker image...
+      - echo docker build -t codebuild-poc-20190416 . 
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Tagging image
+      - echo docker tag codebuild-poc-20190416:latest 454394710488.dkr.ecr.us-east-1.amazonaws.com/codebuild-poc-20190416:latest
+      - echo Pushing the Docker image...
+      - echo docker push 454394710488.dkr.ecr.us-east-1.amazonaws.com/codebuild-poc-20190416:latest
