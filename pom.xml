@@ -28,38 +28,24 @@
 	</modules>
 
 	<distributionManagement>
-        <repository>
-            <id>internal.repo</id>
-            <url>file://${project.build.directory}/mvn-repo</url>
-        </repository>
-    </distributionManagement>
+		<snapshotRepository>
+			<id>wc1-poc-spring-2019</id>
+			<url>s3://wc1-poc-spring-2019/snapshot</url>
+		</snapshotRepository>
+		<repository>
+			<id>wc1-poc-spring-2019</id>
+			<url>s3://wc1-poc-spring-2019/release</url>
+		</repository>
+	</distributionManagement>
 	
 	<build>
-		<plugins>
-			<plugin>
-				<groupId>com.github.github</groupId>
-				<artifactId>site-maven-plugin</artifactId>
-				<version>0.11</version>
-				<configuration>
-					<message>Maven artifacts for ${project.version}</message>  <!-- git commit message -->
-					<noJekyll>true</noJekyll>                                  <!-- disable webpage processing -->
-					<outputDirectory>${project.build.directory}/mvn-repo</outputDirectory> <!-- matches distribution management repository url above -->
-					<branch>refs/heads/mvn-repo</branch>                       <!-- remote branch name -->
-					<includes><include>**/*</include></includes>
-					<repositoryName>user-data</repositoryName>      <!-- github repo name -->
-					<repositoryOwner>sergii-c</repositoryOwner>    <!-- github username  -->
-				</configuration>
-				<executions>
-				<!-- run site-maven-plugin's 'site' target as part of the build's normal 'deploy' phase -->
-				<execution>
-					<goals>
-					<goal>site</goal>
-					</goals>
-					<phase>deploy</phase>
-				</execution>
-				</executions>
-			</plugin>
-		</plugins>
+		<extensions>
+        	<extension>
+            	<groupId>com.gkatzioura.maven.cloud</groupId>
+            	<artifactId>s3-storage-wagon</artifactId>	
+            	<version>1.0</version>
+        	</extension>
+    	</extensions>
 	</build>
 
 </project>
