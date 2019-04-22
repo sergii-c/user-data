@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.1.4.RELEASE</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>com.wc1.poc</groupId>
+	<artifactId>user-data</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>user-data</name>
+	<description>User Data</description>
+
+	<packaging>pom</packaging>
+
+	<properties>
+		<java.version>1.8</java.version>
+		<!-- github server corresponds to entry in ~/.m2/settings.xml -->
+		<github.global.server>github</github.global.server>
+	</properties>
+
+	<modules>
+		<module>user-data-service</module>
+		<module>user-data-client</module>
+	</modules>
+
+	<distributionManagement>
+        <repository>
+            <id>internal.repo</id>
+            <url>file://${project.build.directory}/mvn-repo</url>
+        </repository>
+    </distributionManagement>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.github.github</groupId>
+				<artifactId>site-maven-plugin</artifactId>
+				<version>0.11</version>
+				<configuration>
+					<message>Maven artifacts for ${project.version}</message>  <!-- git commit message -->
+					<noJekyll>true</noJekyll>                                  <!-- disable webpage processing -->
+					<outputDirectory>${project.build.directory}/mvn-repo</outputDirectory> <!-- matches distribution management repository url above -->
+					<branch>refs/heads/mvn-repo</branch>                       <!-- remote branch name -->
+					<includes><include>**/*</include></includes>
+					<repositoryName>user-data</repositoryName>      <!-- github repo name -->
+					<repositoryOwner>sergii-c</repositoryOwner>    <!-- github username  -->
+				</configuration>
+				<executions>
+				<!-- run site-maven-plugin's 'site' target as part of the build's normal 'deploy' phase -->
+				<execution>
+					<goals>
+					<goal>site</goal>
+					</goals>
+					<phase>deploy</phase>
+				</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
