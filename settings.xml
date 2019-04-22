@@ -1,9 +1,14 @@
 <settings>    
     <servers>        
         <server>
-            <id>wc1-poc-spring-2019</id>
-            <username>AKIAZYQRAH6BZ2V4R47F</username>
-            <password>TjU5IJDt8imd46fsuk0b2gmYhIclmVnUl2TXrPzy</password>
+            <id>s3.artifacts.release</id>
+            <username>AKIAZYQRAH6BTPJELKFS</username>
+            <password>kTtGFz+DLEtkyUlAR9bw8s66+TAWMRw/DpaqKOx2</password>
+        </server>
+        <server>
+            <id>s3.artifacts.snapshot</id>
+            <username>AKIAZYQRAH6BTPJELKFS</username>
+            <password>kTtGFz+DLEtkyUlAR9bw8s66+TAWMRw/DpaqKOx2</password>
         </server>
     </servers>    
 </settings>

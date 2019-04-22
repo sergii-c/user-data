@@ -18,8 +18,7 @@
 
 	<properties>
 		<java.version>1.8</java.version>
-		<!-- github server corresponds to entry in ~/.m2/settings.xml -->
-		<github.global.server>github</github.global.server>
+		<artifactrepo.url>wc1-poc-spring-2019</artifactrepo.url>
 	</properties>
 
 	<modules>
@@ -28,22 +27,22 @@
 	</modules>
 
 	<distributionManagement>
-		<snapshotRepository>
-			<id>wc1-poc-spring-2019</id>
-			<url>s3://wc1-poc-spring-2019/snapshot</url>
-		</snapshotRepository>
 		<repository>
-			<id>wc1-poc-spring-2019</id>
-			<url>s3://wc1-poc-spring-2019/release</url>
+			<id>s3.artifacts.release</id>
+			<url>s3://${artifactrepo.url}/release</url>
 		</repository>
+		<snapshotRepository>
+			<id>s3.artifacts.snapshot</id>
+			<url>s3://${artifactrepo.url}/snapshot</url>
+		</snapshotRepository>		
 	</distributionManagement>
 	
 	<build>
 		<extensions>
 			<extension>
-				<groupid>com.allogy.maven.wagon</groupid>
-				<artifactid>maven-s3-wagon</artifactid>
-				<version>1.1.0</version>
+				<groupId>org.kuali.maven.wagons</groupId>
+      			<artifactId>maven-s3-wagon</artifactId>
+      			<version>1.2.1</version>
 			</extension>
 		</extensions>
 	</build>
