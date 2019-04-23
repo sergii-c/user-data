@@ -2,8 +2,7 @@ version: 0.1
 
 phases:      
   install:
-    commands:
-      - echo ### installing maven ###
+    commands:      
       - apt-get update -y
       - apt-get install -y software-properties-common
       - add-apt-repository ppa:openjdk-r/ppa
@@ -18,18 +17,17 @@ phases:
     commands:
       - echo Build started on `date`      
       - echo Now we go with maven
-      - mvn clean package      
-      #- $(aws s3 cp user-data-service/target/user-data-service-*.jar s3://wc1-poc-spring-2019/ --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers --storage-class REDUCED_REDUNDANCY)
-      - $(cp user-data-service/target/user-data-service-*.jar user-data-service/target/user-data-service.jar)
+      - mvn clean package            
+      - $(cp user-data-service/target/user-data-service-*.jar user-data-service.jar)
       - echo Building the Docker image...      
-      - docker build -t poc-tutorial .
+      - docker build -t poc-userdata .
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Tagging image
-      - docker tag poc-tutorial:latest 671124307843.dkr.ecr.us-east-1.amazonaws.com/poc-tutorial:latest
+      - docker tag poc-userdata:latest 671124307843.dkr.ecr.us-east-1.amazonaws.com/poc-userdata:latest
       - echo Pushing the Docker image...
-      - docker push 671124307843.dkr.ecr.us-east-1.amazonaws.com/poc-tutorial:latest
+      - docker push 671124307843.dkr.ecr.us-east-1.amazonaws.com/poc-userdata:latest
 artifacts:
   files:
-    - user-data-service/target/user-data-service.jar
+    - user-data-service.jar
