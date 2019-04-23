@@ -18,7 +18,7 @@ phases:
       - echo Build started on `date`      
       - echo Now we go with maven
       - mvn clean package            
-      - $(cp user-data-service/target/user-data-service-*.jar user-data-service.jar)
+      - $(cp user-data-client/target/user-data-client-*.jar user-data-client.jar)
       - echo Building the Docker image...      
       - docker build -t poc-userdata .
   post_build:
@@ -30,4 +30,4 @@ phases:
       - docker push 671124307843.dkr.ecr.us-east-1.amazonaws.com/poc-tutorial:latest
 artifacts:
   files:
-    - user-data-service.jar
+    - user-data-client.jar
