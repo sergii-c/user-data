@@ -9,8 +9,7 @@ phases:
       - add-apt-repository ppa:openjdk-r/ppa
       - apt-get update -y
       - apt-get install -y openjdk-8-jdk-headless
-      - echo apt-get install -y maven
-      - cp ./settings.xml /root/.m2/settings.xml
+      - echo apt-get install -y maven      
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
@@ -19,13 +18,13 @@ phases:
     commands:
       - echo Build started on `date`      
       - echo Now we go with maven
-      - mvn clean deploy
+      - mvn clean package
       - echo Building the Docker image...
-      - echo docker build -t codebuild-poc-20190416 . 
+      - echo docker build -t poc-userdata-spring2019 . 
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Tagging image
-      - echo docker tag codebuild-poc-20190416:latest 671124307843.dkr.ecr.us-east-1.amazonaws.com/poc-tutorial:latest
+      - echo docker tag poc-userdata-spring2019:latest 671124307843.dkr.ecr.us-east-1.amazonaws.com/poc-tutorial:latest
       - echo Pushing the Docker image...
       - echo docker push 671124307843.dkr.ecr.us-east-1.amazonaws.com/poc-tutorial:latest
