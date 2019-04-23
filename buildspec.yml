@@ -19,6 +19,8 @@ phases:
       - echo Build started on `date`      
       - echo Now we go with maven
       - mvn clean package
+      - $(aws s3 rm s3://wc1-poc-spring-2019/user-data-service.jar)
+      - $(aws s3 cp user-data-service/target/user-data-service-*.jar s3://wc1-poc-spring-2019/ --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers --storage-class REDUCED_REDUNDANCY)
       - echo Building the Docker image...
       - echo docker build -t poc-userdata-spring2019 . 
   post_build:
