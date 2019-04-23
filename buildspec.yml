@@ -22,7 +22,7 @@ phases:
       #- $(aws s3 cp user-data-service/target/user-data-service-*.jar s3://wc1-poc-spring-2019/ --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers --storage-class REDUCED_REDUNDANCY)
       - $(cp user-data-service/target/user-data-service-*.jar user-data-service/target/user-data-service.jar)
       - echo Building the Docker image...
-      - $(docker ps)
+      - docker ps
       - $(docker build -t poc-tutorial .)
   post_build:
     commands:
