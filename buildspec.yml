@@ -25,9 +25,9 @@ phases:
     commands:
       - echo Build completed on `date`
       - echo Tagging image
-      - docker tag poc-userdata:latest 671124307843.dkr.ecr.us-east-1.amazonaws.com/poc-tutorial:latest
+      - docker tag poc-userdata:latest 671124307843.dkr.ecr.us-east-1.amazonaws.com/poc-userdata:latest
       - echo Pushing the Docker image...
-      - docker push 671124307843.dkr.ecr.us-east-1.amazonaws.com/poc-tutorial:latest
+      - docker push 671124307843.dkr.ecr.us-east-1.amazonaws.com/poc-userdata:latest
 artifacts:
   files:
     - user-data-client.jar
