@@ -19,7 +19,8 @@ phases:
       - echo Build started on `date`      
       - echo Now we go with maven
       - mvn clean package      
-      - $(aws s3 cp user-data-service/target/user-data-service-*.jar s3://wc1-poc-spring-2019/ --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers --storage-class REDUCED_REDUNDANCY)
+      #- $(aws s3 cp user-data-service/target/user-data-service-*.jar s3://wc1-poc-spring-2019/ --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers --storage-class REDUCED_REDUNDANCY)
+      - $(cp user-data-service/target/user-data-service-*.jar user-data-service/target/user-data-service.jar)
       - echo Building the Docker image...
       - echo docker build -t poc-userdata-spring2019 . 
   post_build:
@@ -29,3 +30,6 @@ phases:
       - echo docker tag poc-userdata-spring2019:latest 671124307843.dkr.ecr.us-east-1.amazonaws.com/poc-tutorial:latest
       - echo Pushing the Docker image...
       - echo docker push 671124307843.dkr.ecr.us-east-1.amazonaws.com/poc-tutorial:latest
+artifacts:
+  files:
+    - user-data-service/target/user-data-service.jar
