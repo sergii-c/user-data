@@ -25,6 +25,8 @@ phases:
     commands:
       - echo Build completed on `date`
       - echo Tagging image
+      - echo $CODEBUILD_RESOLVED_SOURCE_VERSION
+      - echo `git branch`
       - docker tag poc-userdata:latest 671124307843.dkr.ecr.us-east-1.amazonaws.com/poc-userdata:$(git branch | grep \* | cut -d ' ' -f2)
       - echo Pushing the Docker image...
       - docker push 671124307843.dkr.ecr.us-east-1.amazonaws.com/poc-userdata:$(git branch | grep \* | cut -d ' ' -f2)
