@@ -25,13 +25,13 @@ phases:
     commands:
       - echo Build completed on `date`
       - echo Tagging image
-      - echo $CODEBUILD_RESOLVED_SOURCE_VERSION
-      - echo `git branch`
-      - docker tag poc-userdata:latest 671124307843.dkr.ecr.us-east-1.amazonaws.com/poc-userdata:$(git branch | grep \* | cut -d ' ' -f2)
+      - echo 
+      - CURRENT_BRANCH_SHORT=git branch -a --contains $CODEBUILD_RESOLVED_SOURCE_VERSION | tail -n 1 | sed 's/.*\///'
+      - docker tag poc-userdata:latest 671124307843.dkr.ecr.us-east-1.amazonaws.com/poc-userdata:$CURRENT_BRANCH_SHORT
       - echo Pushing the Docker image...
-      - docker push 671124307843.dkr.ecr.us-east-1.amazonaws.com/poc-userdata:$(git branch | grep \* | cut -d ' ' -f2)
-      - aws cloudformation deploy --stack-name=infrastructure-$(git branch | grep \* | cut -d ' ' -f2) --template-file=cf/init.yml --capabilities=CAPABILITY_IAM --parameter-overrides EnvironmentName=`poc-$(git branch | grep \* | cut -d ' ' -f2)`
-      - aws cloudformation deploy --stack-name=user-data-$(git branch | grep \* | cut -d ' ' -f2) --template-file=cf/user-data.yml --capabilities=CAPABILITY_IAM --parameter-overrides EnvironmentName=`poc-$(git branch | grep \* | cut -d ' ' -f2)`
+      - docker push 671124307843.dkr.ecr.us-east-1.amazonaws.com/poc-userdata:$CURRENT_BRANCH_SHORT
+      - aws cloudformation deploy --stack-name=infrastructure-$CURRENT_BRANCH_SHORT --template-file=cf/init.yml --capabilities=CAPABILITY_IAM --parameter-overrides EnvironmentName=`poc-$(git branch | grep \* | cut -d ' ' -f2)`
+      - aws cloudformation deploy --stack-name=user-data-$CURRENT_BRANCH_SHORT --template-file=cf/user-data.yml --capabilities=CAPABILITY_IAM --parameter-overrides EnvironmentName=`poc-$(git branch | grep \* | cut -d ' ' -f2)`
 artifacts:
   files:
     - user-data-client.jar
