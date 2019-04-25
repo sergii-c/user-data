@@ -13,6 +13,7 @@ phases:
     commands:
       - echo Logging in to Amazon ECR...
       - $(aws ecr get-login --no-include-email --region=us-east-1)
+      - CURRENT_BRANCH_SHORT=$(git branch -a --contains $CODEBUILD_RESOLVED_SOURCE_VERSION | tail -n 1 | sed 's/.*\///')
   build:
     commands:
       - echo Build started on `date`      
@@ -25,8 +26,7 @@ phases:
     commands:
       - echo Build completed on `date`
       - echo Tagging image
-      - echo $(git branch -a --contains $CODEBUILD_RESOLVED_SOURCE_VERSION | tail -n 1 | sed 's/.*\///')
-      - export CURRENT_BRANCH_SHORT=$(git branch -a --contains $CODEBUILD_RESOLVED_SOURCE_VERSION | tail -n 1 | sed 's/.*\///')
+      - echo $(git branch -a --contains $CODEBUILD_RESOLVED_SOURCE_VERSION | tail -n 1 | sed 's/.*\///')      
       - echo $CURRENT_BRANCH_SHORT
       - docker tag poc-userdata:latest 671124307843.dkr.ecr.us-east-1.amazonaws.com/poc-userdata:$CURRENT_BRANCH_SHORT
       - echo Pushing the Docker image...
