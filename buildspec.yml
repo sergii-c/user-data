@@ -26,7 +26,7 @@ phases:
       - echo Build completed on `date`
       - echo Tagging image
       - echo $(git branch -a --contains $CODEBUILD_RESOLVED_SOURCE_VERSION | tail -n 1 | sed 's/.*\///')
-      - CURRENT_BRANCH_SHORT=git branch -a --contains $CODEBUILD_RESOLVED_SOURCE_VERSION | tail -n 1 | sed 's/.*\///'
+      - CURRENT_BRANCH_SHORT=$(git branch -a --contains $CODEBUILD_RESOLVED_SOURCE_VERSION | tail -n 1 | sed 's/.*\///')
       - docker tag poc-userdata:latest 671124307843.dkr.ecr.us-east-1.amazonaws.com/poc-userdata:$CURRENT_BRANCH_SHORT
       - echo Pushing the Docker image...
       - docker push 671124307843.dkr.ecr.us-east-1.amazonaws.com/poc-userdata:$CURRENT_BRANCH_SHORT
