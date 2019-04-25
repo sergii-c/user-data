@@ -29,7 +29,7 @@ phases:
       - echo Pushing the Docker image...
       - docker push 671124307843.dkr.ecr.us-east-1.amazonaws.com/poc-userdata:latest
       - aws cloudformation deploy --stack-name=infrastructure --template-file=cf/init.yml --capabilities=CAPABILITY_IAM
-      - aws cloudformation deploy --stack-name=infrastructure --template-file=cf/user-data.yml --capabilities=CAPABILITY_IAM
+      - aws cloudformation deploy --stack-name=user-data --template-file=cf/user-data.yml --capabilities=CAPABILITY_IAM
 artifacts:
   files:
     - user-data-client.jar
