@@ -217,8 +217,8 @@ Resources:
           - - service
             - Fn::ImportValue: !Join [':', [!Ref 'EnvironmentName', 'ClusterName']]
             - !Ref 'ServiceName'
-      MinCapacity: 2
-      MaxCapacity: 10
+      MinCapacity: 1
+      MaxCapacity: 1
       RoleARN:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'AutoscalingRole']]
