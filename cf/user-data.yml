@@ -44,6 +44,14 @@ Parameters:
     Type: Number
     Default: 2048
     Description: How much memory in megabytes to give the container
+  TaskCpu:
+    Type: Number
+    Default: 2048
+    Description: How much CPU to give the container. 1024 is 1 CPU
+  TaskMemory:
+    Type: Number
+    Default: 4096
+    Description: How much memory in megabytes to give the container
   Path:
     Type: String
     Default: "*"
@@ -82,8 +90,8 @@ Resources:
     Type: AWS::ECS::TaskDefinition
     Properties:
       Family: !Ref 'ServiceName'
-      Cpu: !Ref 'ContainerCpu'
-      Memory: !Ref 'ContainerMemory'
+      Cpu: !Ref 'TaskCpu'
+      Memory: !Ref 'TaskMemory'
       NetworkMode: awsvpc
       RequiresCompatibilities:
         - FARGATE
