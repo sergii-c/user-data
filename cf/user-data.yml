@@ -8,16 +8,33 @@ Parameters:
                  Used to locate other resources in the same environment.
   ServiceName:
     Type: String
-    Default: user-data
+    Default: user-services
     Description: A name for the service
-  ImageUrl:
+  UserDataServiceName:
+    Type: String
+    Default: user-data
+    Description: A name for user-data
+  UserPaymentsServiceName:
+    Type: String
+    Default: user-payments
+    Description: A name for user-payments
+  UserDataImageUrl:
     Type: String
     Default: 671124307843.dkr.ecr.us-east-1.amazonaws.com/poc-userdata
     Description: The url of a docker image that contains the application process that
                  will handle the traffic for this service
+  UserPaymentsImageUrl:
+    Type: String
+    Default: 671124307843.dkr.ecr.us-east-1.amazonaws.com/poc-userpayments
+    Description: The url of a docker image that contains the application process that
+                 will handle the traffic for this service                               
   UserDataContainerPort:
     Type: Number
     Default: 8080
+    Description: What port number the application inside the docker container is binding to
+  UserPaymentsContainerPort:
+    Type: Number
+    Default: 8081
     Description: What port number the application inside the docker container is binding to
   ContainerCpu:
     Type: Number
@@ -26,6 +43,14 @@ Parameters:
   ContainerMemory:
     Type: Number
     Default: 2048
+    Description: How much memory in megabytes to give the container
+  TaskCpu:
+    Type: Number
+    Default: 2048
+    Description: How much CPU to give the container. 1024 is 1 CPU
+  TaskMemory:
+    Type: Number
+    Default: 4096
     Description: How much memory in megabytes to give the container
   Path:
     Type: String
@@ -41,7 +66,7 @@ Parameters:
                  assigned to different paths on the load balancer.
   DesiredCount:
     Type: Number
-    Default: 2
+    Default: 1
     Description: How many copies of the service task to run
   Role:
     Type: String
@@ -65,8 +90,8 @@ Resources:
     Type: AWS::ECS::TaskDefinition
     Properties:
       Family: !Ref 'ServiceName'
-      Cpu: !Ref 'ContainerCpu'
-      Memory: !Ref 'ContainerMemory'
+      Cpu: !Ref 'TaskCpu'
+      Memory: !Ref 'TaskMemory'
       NetworkMode: awsvpc
       RequiresCompatibilities:
         - FARGATE
@@ -79,12 +104,24 @@ Resources:
           - !Ref 'Role'
           - !Ref "AWS::NoValue"
       ContainerDefinitions:
-        - Name: !Ref 'ServiceName'
+        - Name: !Ref 'UserDataServiceName'
           Cpu: !Ref 'ContainerCpu'
           Memory: !Ref 'ContainerMemory'
-          Image: !Ref 'ImageUrl'
+          Image: !Ref 'UserDataImageUrl'
           PortMappings:
             - ContainerPort: !Ref 'UserDataContainerPort'
+          LogConfiguration:
+            LogDriver: 'awslogs'
+            Options:
+              awslogs-group: !Join ['-', [!Ref 'EnvironmentName', 'service', !Ref 'ServiceName']]
+              awslogs-region: !Ref 'AWS::Region'
+              awslogs-stream-prefix: !Ref 'ServiceName'
+        - Name: !Ref 'UserPaymentsServiceName'
+          Cpu: !Ref 'ContainerCpu'
+          Memory: !Ref 'ContainerMemory'
+          Image: !Ref 'UserPaymentsImageUrl'
+          PortMappings:
+            - ContainerPort: !Ref 'UserPaymentsContainerPort'
           LogConfiguration:
             LogDriver: 'awslogs'
             Options:
@@ -121,22 +158,22 @@ Resources:
                 !Join [':', [!Ref 'EnvironmentName', 'PublicSubnetTwo']]
       TaskDefinition: !Ref 'TaskDefinition'
       LoadBalancers:
-        - ContainerName: !Ref 'ServiceName'
-          ContainerPort: !Ref 'UserDataContainerPort'
+        - ContainerName: !Ref 'UserPaymentsServiceName'
+          ContainerPort: !Ref 'UserPaymentsContainerPort'
           TargetGroupArn: !Ref 'TargetGroup'
 
   # A target group. This is used for keeping track of all the tasks, and
   # what IP addresses / port numbers they have. You can query it yourself,
   # to use the addresses yourself, but most often this target group is just
   # connected to an application load balancer, or network load balancer, so
-  # it can automatically distribute traffic across all the targets.
+  # it can automatically distribute traffic across all the targets..
   TargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      HealthCheckIntervalSeconds: 6
+      HealthCheckIntervalSeconds: 50
       HealthCheckPath: /
       HealthCheckProtocol: HTTP
-      HealthCheckTimeoutSeconds: 5
+      HealthCheckTimeoutSeconds: 40
       HealthyThresholdCount: 2
       TargetType: ip
       Name: !Ref 'ServiceName'
@@ -180,8 +217,8 @@ Resources:
           - - service
             - Fn::ImportValue: !Join [':', [!Ref 'EnvironmentName', 'ClusterName']]
             - !Ref 'ServiceName'
-      MinCapacity: 2
-      MaxCapacity: 10
+      MinCapacity: 1
+      MaxCapacity: 1
       RoleARN:
         Fn::ImportValue:
           !Join [':', [!Ref 'EnvironmentName', 'AutoscalingRole']]

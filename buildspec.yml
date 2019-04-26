@@ -1,36 +1,36 @@
 version: 0.1
 
-phases:      
+phases:
   install:
-    commands:      
+    commands:
       - apt-get update -y
       - apt-get install -y software-properties-common
       - add-apt-repository ppa:openjdk-r/ppa
       - apt-get update -y
       - apt-get install -y openjdk-8-jdk-headless
-      - echo apt-get install -y maven      
+      - echo apt-get install -y maven
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
-      - $(aws ecr get-login --no-include-email --region=us-east-1)      
+      - $(aws ecr get-login --no-include-email --region=us-east-1)
   build:
     commands:
-      - echo Build started on `date`      
+      - echo Build started on `date`
       - echo Now we go with maven
-      - mvn clean package            
+      - mvn clean package
       - $(cp user-data-client/target/user-data-client-*.jar user-data-client-$(git branch -a --contains $CODEBUILD_RESOLVED_SOURCE_VERSION | tail -n 1 | sed 's/.*\///').jar)
-      - echo Building the Docker image...      
+      - echo Building the Docker image....
       - docker build -t poc-userdata .
   post_build:
     commands:
       - echo Build completed on `date`
-      - echo Tagging image      
+      - echo Tagging image
       - docker tag poc-userdata:latest 671124307843.dkr.ecr.us-east-1.amazonaws.com/poc-userdata:$(git branch -a --contains $CODEBUILD_RESOLVED_SOURCE_VERSION | tail -n 1 | sed 's/.*\///')
       - echo infrastructure suffix will be $(git branch -a --contains $CODEBUILD_RESOLVED_SOURCE_VERSION | tail -n 1 | sed 's/.*\///')
       - echo Pushing the Docker image...
       - docker push 671124307843.dkr.ecr.us-east-1.amazonaws.com/poc-userdata:$(git branch -a --contains $CODEBUILD_RESOLVED_SOURCE_VERSION | tail -n 1 | sed 's/.*\///')
       - aws cloudformation deploy --stack-name=infrastructure-$(git branch -a --contains $CODEBUILD_RESOLVED_SOURCE_VERSION | tail -n 1 | sed 's/.*\///') --template-file=cf/init.yml --capabilities=CAPABILITY_IAM --parameter-overrides EnvironmentName="poc-$(git branch -a --contains $CODEBUILD_RESOLVED_SOURCE_VERSION | tail -n 1 | sed 's/.*\///')" --no-fail-on-empty-changeset
-      - aws cloudformation deploy --stack-name=user-data-$(git branch -a --contains $CODEBUILD_RESOLVED_SOURCE_VERSION | tail -n 1 | sed 's/.*\///') --template-file=cf/user-data.yml --capabilities=CAPABILITY_IAM --parameter-overrides EnvironmentName="poc-$(git branch -a --contains $CODEBUILD_RESOLVED_SOURCE_VERSION | tail -n 1 | sed 's/.*\///')" ServiceName="user-data-$(git branch -a --contains $CODEBUILD_RESOLVED_SOURCE_VERSION | tail -n 1 | sed 's/.*\///')" --no-fail-on-empty-changeset
+      - aws cloudformation deploy --stack-name=user-services-$(git branch -a --contains $CODEBUILD_RESOLVED_SOURCE_VERSION | tail -n 1 | sed 's/.*\///') --template-file=cf/user-data.yml --capabilities=CAPABILITY_IAM --parameter-overrides EnvironmentName="poc-$(git branch -a --contains $CODEBUILD_RESOLVED_SOURCE_VERSION | tail -n 1 | sed 's/.*\///')" ServiceName="user-services-$(git branch -a --contains $CODEBUILD_RESOLVED_SOURCE_VERSION | tail -n 1 | sed 's/.*\///')" --no-fail-on-empty-changeset
 artifacts:
   files:
     - user-data-client-*.jar
