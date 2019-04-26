@@ -166,7 +166,7 @@ Resources:
   # what IP addresses / port numbers they have. You can query it yourself,
   # to use the addresses yourself, but most often this target group is just
   # connected to an application load balancer, or network load balancer, so
-  # it can automatically distribute traffic across all the targets..
+  # it can automatically distribute traffic across all the targets.
   TargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
