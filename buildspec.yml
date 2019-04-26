@@ -19,7 +19,7 @@ phases:
       - echo Now we go with maven
       - mvn clean package
       - $(cp user-data-client/target/user-data-client-*.jar user-data-client-$(git branch -a --contains $CODEBUILD_RESOLVED_SOURCE_VERSION | tail -n 1 | sed 's/.*\///').jar)
-      - echo Building the Docker image...
+      - echo Building the Docker image....
       - docker build -t poc-userdata .
   post_build:
     commands:
