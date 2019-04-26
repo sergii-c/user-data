@@ -15,7 +15,7 @@ Parameters:
     Default: 671124307843.dkr.ecr.us-east-1.amazonaws.com/poc-userdata
     Description: The url of a docker image that contains the application process that
                  will handle the traffic for this service
-  ContainerPort:
+  UserDataContainerPort:
     Type: Number
     Default: 8080
     Description: What port number the application inside the docker container is binding to
@@ -84,7 +84,7 @@ Resources:
           Memory: !Ref 'ContainerMemory'
           Image: !Ref 'ImageUrl'
           PortMappings:
-            - ContainerPort: !Ref 'ContainerPort'
+            - ContainerPort: !Ref 'UserDataContainerPort'
           LogConfiguration:
             LogDriver: 'awslogs'
             Options:
@@ -122,7 +122,7 @@ Resources:
       TaskDefinition: !Ref 'TaskDefinition'
       LoadBalancers:
         - ContainerName: !Ref 'ServiceName'
-          ContainerPort: !Ref 'ContainerPort'
+          ContainerPort: !Ref 'UserDataContainerPort'
           TargetGroupArn: !Ref 'TargetGroup'
 
   # A target group. This is used for keeping track of all the tasks, and
