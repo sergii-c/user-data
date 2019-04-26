@@ -30,7 +30,12 @@ phases:
       - echo Pushing the Docker image...
       - docker push 671124307843.dkr.ecr.us-east-1.amazonaws.com/poc-userdata:$(git branch -a --contains $CODEBUILD_RESOLVED_SOURCE_VERSION | tail -n 1 | sed 's/.*\///')
       - aws cloudformation deploy --stack-name=infrastructure-$(git branch -a --contains $CODEBUILD_RESOLVED_SOURCE_VERSION | tail -n 1 | sed 's/.*\///') --template-file=cf/init.yml --capabilities=CAPABILITY_IAM --parameter-overrides EnvironmentName="poc-$(git branch -a --contains $CODEBUILD_RESOLVED_SOURCE_VERSION | tail -n 1 | sed 's/.*\///')" --no-fail-on-empty-changeset
-      - aws cloudformation deploy --stack-name=user-services-$(git branch -a --contains $CODEBUILD_RESOLVED_SOURCE_VERSION | tail -n 1 | sed 's/.*\///') --template-file=cf/user-data.yml --capabilities=CAPABILITY_IAM --parameter-overrides EnvironmentName="poc-$(git branch -a --contains $CODEBUILD_RESOLVED_SOURCE_VERSION | tail -n 1 | sed 's/.*\///')" ServiceName="user-data-$(git branch -a --contains $CODEBUILD_RESOLVED_SOURCE_VERSION | tail -n 1 | sed 's/.*\///')" --no-fail-on-empty-changeset
+      - aws cloudformation deploy --stack-name=user-services-$(git branch -a --contains $CODEBUILD_RESOLVED_SOURCE_VERSION | tail -n 1 | sed 's/.*\///') --template-file=cf/user-data.yml \
+        --capabilities=CAPABILITY_IAM --parameter-overrides \
+        EnvironmentName="poc-$(git branch -a --contains $CODEBUILD_RESOLVED_SOURCE_VERSION | tail -n 1 | sed 's/.*\///')" \
+        ServiceName="user-data-$(git branch -a --contains $CODEBUILD_RESOLVED_SOURCE_VERSION | tail -n 1 | sed 's/.*\///')" \
+        --no-fail-on-empty-changeset ServiceName="user-data-$(git branch -a --contains $CODEBUILD_RESOLVED_SOURCE_VERSION | tail -n 1 | sed 's/.*\///')" --no-fail-on-empty-changeset \
+        UserDataServiceName="user-data-$(git branch -a --contains $CODEBUILD_RESOLVED_SOURCE_VERSION | tail -n 1 | sed 's/.*\///')" --no-fail-on-empty-changeset         
 artifacts:
   files:
     - user-data-client-*.jar

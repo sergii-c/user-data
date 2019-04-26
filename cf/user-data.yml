@@ -23,7 +23,7 @@ Parameters:
     Default: 671124307843.dkr.ecr.us-east-1.amazonaws.com/poc-userdata
     Description: The url of a docker image that contains the application process that
                  will handle the traffic for this service
-  UserPaymetsImageUrl:
+  UserPaymentsImageUrl:
     Type: String
     Default: 671124307843.dkr.ecr.us-east-1.amazonaws.com/poc-userpayments
     Description: The url of a docker image that contains the application process that
