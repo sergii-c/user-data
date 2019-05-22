@@ -16,7 +16,7 @@ import java.util.Optional;
 public class UserDataController {
 
     private Map<Integer, UserData> users = new HashMap<Integer, UserData>() {{
-        put(1, new UserData("John", "Smith", 1));
+        put(1, new UserData("John-William", "Smith", 1));
         put(2, new UserData("George", "Douglas", 1));
     }};
 
